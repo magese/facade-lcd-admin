@@ -1,19 +1,19 @@
 <script lang="ts" setup>
-import { computed } from "vue"
-import { useRouter } from "vue-router"
-import { storeToRefs } from "pinia"
-import { useAppStore } from "@/store/modules/app"
-import { useSettingsStore } from "@/store/modules/settings"
-import { useUserStore } from "@/store/modules/user"
-import { UserFilled } from "@element-plus/icons-vue"
-import Hamburger from "../Hamburger/index.vue"
-import Breadcrumb from "../Breadcrumb/index.vue"
-import Sidebar from "../Sidebar/index.vue"
-import Notify from "@/components/Notify/index.vue"
-import ThemeSwitch from "@/components/ThemeSwitch/index.vue"
-import Screenfull from "@/components/Screenfull/index.vue"
-import SearchMenu from "@/components/SearchMenu/index.vue"
-import { DeviceEnum } from "@/constants/app-key"
+import { computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { storeToRefs } from 'pinia'
+import { useAppStore } from '@/store/modules/app'
+import { useSettingsStore } from '@/store/modules/settings'
+import { useUserStore } from '@/store/modules/user'
+import { UserFilled } from '@element-plus/icons-vue'
+import Hamburger from '../Hamburger/index.vue'
+import Breadcrumb from '../Breadcrumb/index.vue'
+import Sidebar from '../Sidebar/index.vue'
+import Notify from '@/components/Notify/index.vue'
+import ThemeSwitch from '@/components/ThemeSwitch/index.vue'
+import Screenfull from '@/components/Screenfull/index.vue'
+import SearchMenu from '@/components/SearchMenu/index.vue'
+import { DeviceEnum } from '@/constants/app-key'
 
 const router = useRouter()
 const appStore = useAppStore()
@@ -23,7 +23,7 @@ const userStore = useUserStore()
 const { sidebar, device } = storeToRefs(appStore)
 const { layoutMode, showNotify, showThemeSwitch, showScreenfull, showSearchMenu } = storeToRefs(settingsStore)
 
-const isTop = computed(() => layoutMode.value === "top")
+const isTop = computed(() => layoutMode.value === 'top')
 const isMobile = computed(() => device.value === DeviceEnum.Mobile)
 
 /** 切换侧边栏 */
@@ -34,7 +34,7 @@ const toggleSidebar = () => {
 /** 登出 */
 const logout = () => {
   userStore.logout()
-  router.push("/dashboard")
+  router.push('/dashboard')
 }
 </script>
 

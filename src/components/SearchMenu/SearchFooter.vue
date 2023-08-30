@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { computed } from "vue"
-import { useAppStore } from "@/store/modules/app"
-import { DeviceEnum } from "@/constants/app-key"
+import { computed } from 'vue'
+import { useAppStore } from '@/store/modules/app'
+import { DeviceEnum } from '@/constants/app-key'
 
 interface Props {
   total: number

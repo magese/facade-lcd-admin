@@ -1,15 +1,15 @@
 <script lang="ts" setup>
-import { computed } from "vue"
-import { storeToRefs } from "pinia"
-import { useSettingsStore } from "@/store/modules/settings"
+import { computed } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useSettingsStore } from '@/store/modules/settings'
 
 const settingsStore = useSettingsStore()
 
 const { layoutMode } = storeToRefs(settingsStore)
 
-const isLeft = computed(() => layoutMode.value === "left")
-const isTop = computed(() => layoutMode.value === "top")
-const isLeftTop = computed(() => layoutMode.value === "left-top")
+const isLeft = computed(() => layoutMode.value === 'left')
+const isTop = computed(() => layoutMode.value === 'top')
+const isLeftTop = computed(() => layoutMode.value === 'left-top')
 </script>
 
 <template>

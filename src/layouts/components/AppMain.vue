@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useTagsViewStore } from "@/store/modules/tags-view"
+import { useTagsViewStore } from '@/store/modules/tags-view'
 // import { CompConsumer } from "./CompConsumer"
 
 const tagsViewStore = useTagsViewStore()
@@ -26,7 +26,7 @@ const tagsViewStore = useTagsViewStore()
 </template>
 
 <style lang="scss" scoped>
-@import "@/styles/mixins.scss";
+@import '@/styles/mixins.scss';
 
 .app-main {
   width: 100%;

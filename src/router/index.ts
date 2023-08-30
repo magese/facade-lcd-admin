@@ -1,8 +1,8 @@
-import { type RouteRecordRaw, createRouter } from "vue-router"
-import { history, flatMultiLevelRoutes } from "./helper"
-import routeSettings from "@/config/route"
+import { type RouteRecordRaw, createRouter } from 'vue-router'
+import { history, flatMultiLevelRoutes } from './helper'
+import routeSettings from '@/config/route'
 
-const Layouts = () => import("@/layouts/index.vue")
+const Layouts = () => import('@/layouts/index.vue')
 
 /**
  * 常驻路由
@@ -10,34 +10,34 @@ const Layouts = () => import("@/layouts/index.vue")
  */
 export const constantRoutes: RouteRecordRaw[] = [
   {
-    path: "/redirect",
+    path: '/redirect',
     component: Layouts,
     meta: {
       hidden: true
     },
     children: [
       {
-        path: "/redirect/:path(.*)",
-        component: () => import("@/views/redirect/index.vue")
+        path: '/redirect/:path(.*)',
+        component: () => import('@/views/redirect/index.vue')
       }
     ]
   },
   {
-    path: "/403",
-    component: () => import("@/views/error-page/403.vue"),
+    path: '/403',
+    component: () => import('@/views/error-page/403.vue'),
     meta: {
-      title: "403",
+      title: '403',
       hidden: true
     }
   },
   {
-    path: "/404",
-    component: () => import("@/views/error-page/404.vue"),
+    path: '/404',
+    component: () => import('@/views/error-page/404.vue'),
     meta: {
-      title: "404",
+      title: '404',
       hidden: true
     },
-    alias: "/:pathMatch(.*)*"
+    alias: '/:pathMatch(.*)*'
   },
   /*{
     path: "/login",
@@ -48,55 +48,55 @@ export const constantRoutes: RouteRecordRaw[] = [
     }
   },*/
   {
-    path: "/",
+    path: '/',
     component: Layouts,
-    redirect: "/dashboard",
+    redirect: '/dashboard',
     children: [
       {
-        path: "dashboard",
-        component: () => import("@/views/dashboard/index.vue"),
-        name: "Dashboard",
+        path: 'dashboard',
+        component: () => import('@/views/dashboard/index.vue'),
+        name: 'Dashboard',
         meta: {
-          title: "首页",
-          svgIcon: "dashboard",
+          title: '首页',
+          svgIcon: 'dashboard',
           affix: true
         }
       }
     ]
   },
   {
-    path: "/link",
+    path: '/link',
     meta: {
-      title: "外链",
-      svgIcon: "link"
+      title: '外链',
+      svgIcon: 'link'
     },
     children: [
       {
-        path: "https://juejin.cn/post/7089377403717287972",
+        path: 'https://juejin.cn/post/7089377403717287972',
         component: () => {},
-        name: "Link1",
+        name: 'Link1',
         meta: {
-          title: "低代码文档"
+          title: '低代码文档'
         }
       }
     ]
   },
   {
-    path: "/table",
+    path: '/table',
     component: Layouts,
-    redirect: "/table/element-plus",
-    name: "Table",
+    redirect: '/table/element-plus',
+    name: 'Table',
     meta: {
-      title: "表格",
-      elIcon: "Grid"
+      title: '表格',
+      elIcon: 'Grid'
     },
     children: [
       {
-        path: "element-plus",
-        component: () => import("@/views/table/element-plus/index.vue"),
-        name: "ElementPlus",
+        path: 'element-plus',
+        component: () => import('@/views/table/element-plus/index.vue'),
+        name: 'ElementPlus',
         meta: {
-          title: "Element Plus",
+          title: 'Element Plus',
           keepAlive: true
         }
       }
@@ -111,9 +111,9 @@ export const constantRoutes: RouteRecordRaw[] = [
  */
 export const asyncRoutes: RouteRecordRaw[] = [
   {
-    path: "/:pathMatch(.*)*", // Must put the 'ErrorPage' route at the end, 必须将 'ErrorPage' 路由放在最后
-    redirect: "/404",
-    name: "ErrorPage",
+    path: '/:pathMatch(.*)*', // Must put the 'ErrorPage' route at the end, 必须将 'ErrorPage' 路由放在最后
+    redirect: '/404',
+    name: 'ErrorPage',
     meta: {
       hidden: true
     }

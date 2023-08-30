@@ -1,18 +1,18 @@
 <script lang="ts" setup>
-import { computed } from "vue"
-import { useRoute } from "vue-router"
-import { storeToRefs } from "pinia"
-import { useAppStore } from "@/store/modules/app"
-import { usePermissionStore } from "@/store/modules/permission"
-import { useSettingsStore } from "@/store/modules/settings"
-import SidebarItem from "./SidebarItem.vue"
-import Logo from "../Logo/index.vue"
-import { getCssVariableValue } from "@/utils"
-import { DeviceEnum } from "@/constants/app-key"
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+import { storeToRefs } from 'pinia'
+import { useAppStore } from '@/store/modules/app'
+import { usePermissionStore } from '@/store/modules/permission'
+import { useSettingsStore } from '@/store/modules/settings'
+import SidebarItem from './SidebarItem.vue'
+import Logo from '../Logo/index.vue'
+import { getCssVariableValue } from '@/utils'
+import { DeviceEnum } from '@/constants/app-key'
 
-const v3SidebarMenuBgColor = getCssVariableValue("--v3-sidebar-menu-bg-color")
-const v3SidebarMenuTextColor = getCssVariableValue("--v3-sidebar-menu-text-color")
-const v3SidebarMenuActiveTextColor = getCssVariableValue("--v3-sidebar-menu-active-text-color")
+const v3SidebarMenuBgColor = getCssVariableValue('--v3-sidebar-menu-bg-color')
+const v3SidebarMenuTextColor = getCssVariableValue('--v3-sidebar-menu-text-color')
+const v3SidebarMenuActiveTextColor = getCssVariableValue('--v3-sidebar-menu-active-text-color')
 
 const route = useRoute()
 const appStore = useAppStore()
@@ -31,21 +31,21 @@ const activeMenu = computed(() => {
 })
 
 const isCollapse = computed(() => !sidebar.value.opened)
-const isLeft = computed(() => layoutMode.value === "left")
-const isTop = computed(() => layoutMode.value === "top")
+const isLeft = computed(() => layoutMode.value === 'left')
+const isTop = computed(() => layoutMode.value === 'top')
 const isMobile = computed(() => device.value === DeviceEnum.Mobile)
 const isLogo = computed(() => isLeft.value && showLogo.value)
 const backgroundColor = computed(() => (isLeft.value ? v3SidebarMenuBgColor : undefined))
 const textColor = computed(() => (isLeft.value ? v3SidebarMenuTextColor : undefined))
 const activeTextColor = computed(() => (isLeft.value ? v3SidebarMenuActiveTextColor : undefined))
 const sidebarMenuItemHeight = computed(() => {
-  return layoutMode.value !== "top" ? "var(--v3-sidebar-menu-item-height)" : "var(--v3-navigationbar-height)"
+  return layoutMode.value !== 'top' ? 'var(--v3-sidebar-menu-item-height)' : 'var(--v3-navigationbar-height)'
 })
 const sidebarMenuHoverBgColor = computed(() => {
-  return layoutMode.value !== "top" ? "var(--v3-sidebar-menu-hover-bg-color)" : "transparent"
+  return layoutMode.value !== 'top' ? 'var(--v3-sidebar-menu-hover-bg-color)' : 'transparent'
 })
 const tipLineWidth = computed(() => {
-  return layoutMode.value !== "top" ? "2px" : "0px"
+  return layoutMode.value !== 'top' ? '2px' : '0px'
 })
 </script>
 
@@ -79,7 +79,7 @@ const tipLineWidth = computed(() => {
 <style lang="scss" scoped>
 @mixin tip-line {
   &::before {
-    content: "";
+    content: '';
     position: absolute;
     top: 0;
     left: 0;

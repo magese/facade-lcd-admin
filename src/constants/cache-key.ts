@@ -1,4 +1,4 @@
-const SYSTEM_NAME = "facade-lcd-admin"
+const SYSTEM_NAME = 'facade-lcd-admin'
 
 /** 缓存数据时用到的 Key */
 class CacheKey {

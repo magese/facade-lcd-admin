@@ -21,7 +21,7 @@ interface RouteSettings {
 
 const routeSettings: RouteSettings = {
   async: false,
-  defaultRoles: ["DEFAULT_ROLE"],
+  defaultRoles: ['DEFAULT_ROLE'],
   thirdLevelRouteCache: false
 }
 
