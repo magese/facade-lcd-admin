@@ -65,6 +65,27 @@ export const constantRoutes: RouteRecordRaw[] = [
     ]
   },
   {
+    path: '/lcd',
+    component: Layouts,
+    redirect: '/lcd/config',
+    name: 'LCD',
+    meta: {
+      title: '低代码',
+      elIcon: 'Grid'
+    },
+    children: [
+      {
+        path: 'config',
+        component: () => import('@/views/lcd/config/index.vue'),
+        name: 'LcdConfig',
+        meta: {
+          title: '拉取配置',
+          keepAlive: true
+        }
+      }
+    ]
+  },
+  {
     path: '/link',
     meta: {
       title: '外链',
@@ -72,32 +93,11 @@ export const constantRoutes: RouteRecordRaw[] = [
     },
     children: [
       {
-        path: 'https://juejin.cn/post/7089377403717287972',
+        path: 'http://con-files.youcash.com:8090/pages/viewpage.action?pageId=33477703',
         component: () => {},
         name: 'Link1',
         meta: {
           title: '低代码文档'
-        }
-      }
-    ]
-  },
-  {
-    path: '/table',
-    component: Layouts,
-    redirect: '/table/element-plus',
-    name: 'Table',
-    meta: {
-      title: '表格',
-      elIcon: 'Grid'
-    },
-    children: [
-      {
-        path: 'element-plus',
-        component: () => import('@/views/table/element-plus/index.vue'),
-        name: 'ElementPlus',
-        meta: {
-          title: 'Element Plus',
-          keepAlive: true
         }
       }
     ]
