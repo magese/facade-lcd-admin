@@ -1,5 +1,5 @@
-import { type RouteRecordRaw, createRouter } from 'vue-router'
-import { history, flatMultiLevelRoutes } from './helper'
+import {createRouter, type RouteRecordRaw} from 'vue-router'
+import {flatMultiLevelRoutes, history} from './helper'
 import routeSettings from '@/config/route'
 
 const Layouts = () => import('@/layouts/index.vue')
@@ -80,7 +80,8 @@ export const constantRoutes: RouteRecordRaw[] = [
         name: 'LcdConfig',
         meta: {
           title: '拉取配置',
-          keepAlive: true
+          keepAlive: true,
+          elIcon: 'Grid'
         }
       }
     ]
@@ -97,7 +98,8 @@ export const constantRoutes: RouteRecordRaw[] = [
         component: () => {},
         name: 'Link1',
         meta: {
-          title: '低代码文档'
+          title: '低代码文档',
+          svgIcon: 'link'
         }
       }
     ]

@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import { reactive, ref, watch } from 'vue'
-import { pageApi, editApi } from '@/api/config'
-import { type FormInstance, type FormRules, ElMessage, ElMessageBox } from "element-plus";
-import { Search, Refresh, CirclePlus, Download, RefreshRight } from '@element-plus/icons-vue'
-import { usePagination } from '@/hooks/usePagination'
-import { ConfigData } from '@/api/config/types/config'
+import {reactive, ref, watch} from 'vue'
+import {editApi, pageApi} from '@/api/config'
+import {ElMessage, ElMessageBox, type FormInstance, type FormRules} from 'element-plus';
+import {CirclePlus, Download, Refresh, RefreshRight, Search} from '@element-plus/icons-vue'
+import {usePagination} from '@/hooks/usePagination'
+import {ConfigData} from '@/api/config/types/config'
 
 defineOptions({
   // 命名当前组件
