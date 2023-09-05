@@ -23,7 +23,9 @@ export interface ConfigData {
   execTiming: string
   execGap: number
   retryLimit: number
+  retryGap: number
   pullType: string
+  fileType: string
   pullDateOffset: number
   targetFileExt: string
   signature: number
@@ -50,7 +52,9 @@ export interface ConfigEditRequest {
   execTiming: string
   execGap: number
   retryLimit: number
+  retryGap: number
   pullType: string
+  fileType: string
   pullDateOffset: number
   targetFileExt: string
   signature: number
