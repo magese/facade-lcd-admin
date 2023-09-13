@@ -4,7 +4,7 @@ import { editApi, pageApi } from '@/api/config'
 import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from 'element-plus'
 import { CirclePlus, Download, Plus, Minus, Refresh, RefreshRight, Search } from '@element-plus/icons-vue'
 import { usePagination } from '@/hooks/usePagination'
-import { ConfigData } from '@/api/config/types/config'
+import { ConfigData, SourceFile } from '@/api/config/types/config'
 
 defineOptions({
   // 命名当前组件
@@ -42,7 +42,7 @@ const formData = reactive({
   okFileType: '',
   okFileName: '',
   realtimeBeginTime: '',
-  sourceFiles: []
+  sourceFiles: [] as SourceFile[]
 })
 const formRules: FormRules = reactive({
   configName: [{ required: true, trigger: 'blur', message: '请输入配置名称' }],
@@ -67,7 +67,7 @@ const handleEdit = () => {
   formRef.value?.validate((valid: boolean, fields) => {
     if (valid) {
       if (protocolTypes[0].protocol != '') {
-        const types = []
+        const types: string[] = []
         protocolTypes.forEach((pt) => {
           if (pt.protocol != '') {
             types.push(pt.protocol + (pt.sign ? '' : '-noSign') + (pt.accept ? '-loanAdvanceAccept' : ''))
@@ -100,6 +100,7 @@ const handleEdit = () => {
   })
 }
 const resetForm = () => {
+  formRef.value?.resetFields()
   currentUpdateId.value = undefined
   formData.id = ''
   formData.configName = ''
@@ -147,7 +148,8 @@ const addSourceFile = (index: number) => {
     serialNoRegex: '',
     callbackKeyRegex: '',
     addLcdPrefix: 0,
-    required: 1
+    required: 1,
+    renameTo: ''
   }
   if (index >= 0) {
     formData.sourceFiles.push(formData.sourceFiles[index])
@@ -168,6 +170,7 @@ const currentUpdateId = ref<undefined | string>(undefined)
 const handleUpdate = (row: ConfigData) => {
   currentUpdateId.value = row.id
   drawerVisible.value = true
+  Object.assign(formData, row)
 }
 
 const tableData = ref<ConfigData[]>([])
@@ -304,7 +307,15 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getPage
       size="45%"
     >
       <template #default>
-        <el-form ref="formRef" :model="formData" :rules="formRules" label-width="120px" label-position="left">
+        <el-form
+          class="edit-form"
+          ref="formRef"
+          :model="formData"
+          :rules="formRules"
+          label-width="120px"
+          label-position="left"
+        >
+          <el-input v-model="formData.id" style="display: none" />
           <el-timeline>
             <el-timeline-item timestamp="step1" placement="top">
               <el-card>
@@ -343,7 +354,7 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getPage
                 <el-form-item prop="retryLimit" label="重试次数">
                   <el-input-number v-model="formData.retryLimit" :min="1" :max="99" />
                 </el-form-item>
-                <el-form-item prop="configName" label="重试间隔分钟">
+                <el-form-item prop="retryGap" label="重试间隔分钟">
                   <el-input-number v-model="formData.retryGap" :min="1" :max="99" />
                 </el-form-item>
               </el-card>
@@ -385,6 +396,7 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getPage
                   </div>
                 </template>
                 <div v-for="(item, index) in formData.sourceFiles" :key="index">
+                  <el-input v-model="item.id" style="display: none" />
                   <el-divider>文件{{ index + 1 }}</el-divider>
                   <div style="display: flex; justify-content: end; margin: 10px 0">
                     <el-button
@@ -447,6 +459,9 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getPage
                       <el-option label="DES" value="DES" />
                       <el-option label="插件解密" value="PLUGIN" />
                     </el-select>
+                  </el-form-item>
+                  <el-form-item prop="renameTo" label="重命名">
+                    <el-input v-model="item.renameTo" placeholder="请输入重命名" />
                   </el-form-item>
                   <el-form-item prop="serialNoRegex" label="序列号正则">
                     <el-input v-model="item.serialNoRegex" placeholder="请输入序列号提取正则" />
@@ -560,7 +575,11 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getPage
                     <el-input v-model="formData.callbackZipFileName" placeholder="请输入回传压缩包文件名称" />
                   </el-form-item>
                   <el-form-item prop="realtimeBeginTime" label="回传起始时间" v-if="formData.pullType === 'realtime'">
-                    <el-input v-model="formData.realtimeBeginTime" placeholder="请输入实时回传开始时间" />
+                    <el-date-picker
+                      v-model="formData.realtimeBeginTime"
+                      type="datetime"
+                      placeholder="请选择实时回传开始时间"
+                    />
                   </el-form-item>
                   <el-form-item prop="okFileName" label="OK文件名称">
                     <el-input v-model="formData.okFileName" placeholder="请输入OK文件名称" />
@@ -576,6 +595,7 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getPage
       </template>
       <template #footer>
         <el-button @click="drawerVisible = false">取消</el-button>
+        <el-button @click="resetForm">重置</el-button>
         <el-button type="primary" @click="handleEdit">确认</el-button>
       </template>
     </el-drawer>
@@ -609,5 +629,12 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getPage
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.el-input {
+  max-width: 220px;
+  &.input-with-select {
+    max-width: 320px;
+  }
 }
 </style>

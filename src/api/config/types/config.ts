@@ -86,4 +86,5 @@ export interface SourceFile {
   callbackKeyRegex: string
   addLcdPrefix: number
   required: number
+  renameTo: string
 }
