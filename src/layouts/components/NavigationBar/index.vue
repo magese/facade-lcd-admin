@@ -21,7 +21,7 @@ const settingsStore = useSettingsStore()
 const userStore = useUserStore()
 
 const { sidebar, device } = storeToRefs(appStore)
-const { layoutMode, showNotify, showThemeSwitch, showScreenfull, showSearchMenu } = storeToRefs(settingsStore)
+const { layoutMode, showNotify, showThemeSwitch, showScreenfull, showSearchMenu, envMode } = storeToRefs(settingsStore)
 
 const isTop = computed(() => layoutMode.value === 'top')
 const isMobile = computed(() => device.value === DeviceEnum.Mobile)
@@ -48,6 +48,7 @@ const logout = () => {
       <Screenfull v-if="showScreenfull" class="right-menu-item" />
       <ThemeSwitch v-if="showThemeSwitch" class="right-menu-item" />
       <Notify v-if="showNotify" class="right-menu-item" />
+      <el-tag>{{ envMode }}</el-tag>
       <el-dropdown class="right-menu-item">
         <div class="right-menu-avatar">
           <el-avatar :icon="UserFilled" :size="30" />

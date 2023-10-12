@@ -1,5 +1,6 @@
 import axios, { type AxiosInstance, type AxiosRequestConfig } from 'axios'
 import { useUserStoreHook } from '@/store/modules/user'
+import { useSettingsStore } from '@/store/modules/settings'
 import { ElMessage } from 'element-plus'
 import { get, merge } from 'lodash-es'
 import { getToken } from './cache/cookies'
@@ -8,6 +9,10 @@ import { getToken } from './cache/cookies'
 function logout() {
   useUserStoreHook().logout()
   location.reload()
+}
+
+function getEnv() {
+  return useSettingsStore().envMode
 }
 
 /** 创建请求实例 */
@@ -107,7 +112,7 @@ function createRequest(service: AxiosInstance) {
         'Content-Type': 'application/json'
       },
       timeout: 5000,
-      baseURL: import.meta.env.VITE_BASE_API,
+      baseURL: import.meta.env.VITE_BASE_API + '/' + getEnv(),
       data: {}
     }
     // 将默认配置 defaultConfig 和传入的自定义配置 config 进行合并成为 mergeConfig

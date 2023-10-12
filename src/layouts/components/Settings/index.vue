@@ -11,6 +11,7 @@ const settingsStore = useSettingsStore()
 /** 使用 storeToRefs 将提取的属性保持其响应性 */
 const {
   layoutMode,
+  envMode,
   showTagsView,
   showLogo,
   fixedHeader,
@@ -37,6 +38,8 @@ const switchSettings = {
   显示色弱模式: showColorWeakness
 }
 
+const envs = ['sit1-vke', 'sit3-vke', 'uat1-vke', 'uat3-vke', 'pre']
+
 /** 非左侧模式时，Header 都是 fixed 布局 */
 watchEffect(() => {
   layoutMode.value !== 'left' && (fixedHeader.value = true)
@@ -47,6 +50,13 @@ watchEffect(() => {
   <div class="setting-container">
     <h4>布局配置</h4>
     <SelectLayoutMode />
+    <el-divider />
+    <h4>环境配置</h4>
+    <div class="setting-item">
+      <el-select v-model="envMode">
+        <el-option v-for="(item, i) in envs" :key="i" :label="item" :value="item" />
+      </el-select>
+    </div>
     <el-divider />
     <h4>功能配置</h4>
     <div class="setting-item" v-for="(settingValue, settingName, index) in switchSettings" :key="index">

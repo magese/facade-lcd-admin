@@ -264,6 +264,7 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getPage
           <el-table-column prop="channelName" label="渠道名称" align="center" />
           <el-table-column prop="pullType" label="拉取类型" align="center" />
           <el-table-column prop="fileType" label="文件类型" align="center" />
+          <el-table-column prop="fileType" label="源文件数量" align="center" />
           <el-table-column prop="signature" label="是否签章" align="center">
             <template #default="scope">
               <el-tag v-if="scope.row.signature === 1" type="success" effect="plain">是</el-tag>
