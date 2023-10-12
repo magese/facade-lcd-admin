@@ -2,7 +2,7 @@
 import { reactive, ref, watch } from 'vue'
 import { editApi, pageApi } from '@/api/config'
 import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from 'element-plus'
-import { CirclePlus, Download, Plus, Minus, Refresh, RefreshRight, Search } from '@element-plus/icons-vue'
+import { CirclePlus, Plus, Minus, Refresh, RefreshRight, Search } from '@element-plus/icons-vue'
 import { usePagination } from '@/hooks/usePagination'
 import { ConfigData, SourceFile } from '@/api/config/types/config'
 
@@ -15,6 +15,7 @@ const loading = ref<boolean>(false)
 const { paginationData, handleCurrentChange, handleSizeChange } = usePagination()
 
 const drawerVisible = ref<boolean>(false)
+const isView = ref<boolean>(false)
 const formRef = ref<FormInstance | null>(null)
 const formData = reactive({
   id: '',
@@ -173,6 +174,12 @@ const handleUpdate = (row: ConfigData) => {
   Object.assign(formData, row)
 }
 
+const handleView = (row: ConfigData) => {
+  isView.value = true
+  drawerVisible.value = true
+  Object.assign(formData, row)
+}
+
 const tableData = ref<ConfigData[]>([])
 const searchFormRef = ref<FormInstance | null>(null)
 const searchData = reactive({
@@ -215,6 +222,9 @@ const resetSearch = () => {
 
 /** 监听分页参数的变化 */
 watch([() => paginationData.currentPage, () => paginationData.pageSize], getPageData, { immediate: true })
+watch(drawerVisible, (n) => {
+  if (!n) isView.value = false
+})
 </script>
 
 <template>
@@ -248,9 +258,6 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getPage
           <el-button type="primary" :icon="CirclePlus" @click="drawerVisible = true">新增配置</el-button>
         </div>
         <div>
-          <el-tooltip content="下载">
-            <el-button type="primary" :icon="Download" circle />
-          </el-tooltip>
           <el-tooltip content="刷新当前页">
             <el-button type="primary" :icon="RefreshRight" circle @click="getPageData" />
           </el-tooltip>
@@ -259,12 +266,20 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getPage
       <div class="table-wrapper">
         <el-table :data="tableData">
           <el-table-column type="selection" width="50" align="center" />
-          <el-table-column prop="configName" label="配置名称" align="center" />
+          <el-table-column prop="configName" label="配置名称" align="center">
+            <template #default="scope">
+              <el-link type="primary" @click="handleView(scope.row)">{{ scope.row.configName }}</el-link>
+            </template>
+          </el-table-column>
           <el-table-column prop="channelCode" label="渠道号" align="center" />
           <el-table-column prop="channelName" label="渠道名称" align="center" />
           <el-table-column prop="pullType" label="拉取类型" align="center" />
           <el-table-column prop="fileType" label="文件类型" align="center" />
-          <el-table-column prop="fileType" label="源文件数量" align="center" />
+          <el-table-column prop="fileCount" label="源文件数量" align="center">
+            <template #default="scope">
+              <el-text>{{ scope.row.sourceFiles?.length }}</el-text>
+            </template>
+          </el-table-column>
           <el-table-column prop="signature" label="是否签章" align="center">
             <template #default="scope">
               <el-tag v-if="scope.row.signature === 1" type="success" effect="plain">是</el-tag>
@@ -301,7 +316,7 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getPage
     <!-- 新增/修改 -->
     <el-drawer
       v-model="drawerVisible"
-      :title="currentUpdateId === undefined ? '新增配置' : '修改配置'"
+      :title="isView ? '查看配置' : currentUpdateId === undefined ? '新增配置' : '修改配置'"
       @close="resetForm"
       :before-close="(done: () => void) => ElMessageBox.confirm('确认要关闭？').then(() => done())"
       direction="rtl"
@@ -490,6 +505,7 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getPage
                 <h4>目标文件配置</h4>
                 <el-form-item prop="targetFileExt" label="目标文件后缀">
                   <el-select v-model="formData.targetFileExt" placeholder="请选择目标文件后缀">
+                    <el-option label=".tar" value=".tar" />
                     <el-option label=".tar.gz" value=".tar.gz" />
                     <el-option label=".zip" value=".zip" />
                     <el-option label=".txt" value=".txt" />
@@ -564,6 +580,7 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getPage
                     <el-select v-model="formData.callbackType" placeholder="请选择回传类型">
                       <el-option label="PDF" value="pdf" />
                       <el-option label="ZIP" value="zip" />
+                      <el-option label="Kafka" value="kafka" />
                     </el-select>
                   </el-form-item>
                   <el-form-item prop="callbackFilePath" label="回传文件路径">
@@ -596,8 +613,8 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getPage
       </template>
       <template #footer>
         <el-button @click="drawerVisible = false">取消</el-button>
-        <el-button @click="resetForm">重置</el-button>
-        <el-button type="primary" @click="handleEdit">确认</el-button>
+        <el-button @click="resetForm" v-if="!isView">重置</el-button>
+        <el-button type="primary" @click="handleEdit" v-if="!isView">确认</el-button>
       </template>
     </el-drawer>
   </div>
