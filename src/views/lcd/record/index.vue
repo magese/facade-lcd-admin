@@ -113,21 +113,12 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getPage
           <el-table-column prop="pullDate" label="文件日期" align="center" />
           <el-table-column prop="status" label="状态" align="center">
             <template #default="scope">
-              <el-tag effect="plain">{{
-                scope.row.status === 0
-                  ? '0-待拉取'
-                  : scope.row.status === 1
-                  ? '1-待发送'
-                  : scope.row.status === 2
-                  ? scope.row.callback === 1
-                    ? '2-已发送'
-                    : '2-待回传'
-                  : scope.row.status === 3
-                  ? '3-已回传'
-                  : scope.row.status === 9
-                  ? '9-执行失败'
-                  : scope.row.status + '-未知状态'
-              }}</el-tag>
+              <el-tag effect="plain" type="info" v-if="scope.row.status === 0">0-待拉取</el-tag>
+              <el-tag effect="plain" type="warning" v-else-if="scope.row.status === 1">1-待发送</el-tag>
+              <el-tag effect="plain" v-else-if="scope.row.status === 2 && scope.row.callback === 1">2-待回传</el-tag>
+              <el-tag effect="plain" type="success" v-else-if="scope.row.status === 2">2-已发送</el-tag>
+              <el-tag effect="plain" type="danger" v-else-if="scope.row.status === 9">9-执行失败</el-tag>
+              <el-tag effect="plain" type="danger" v-else>{{ scope.row.status + '-未知状态' }}</el-tag>
             </template>
           </el-table-column>
           <el-table-column prop="createTime" label="创建时间" align="center" />
