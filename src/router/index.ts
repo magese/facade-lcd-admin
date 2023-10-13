@@ -83,6 +83,16 @@ export const constantRoutes: RouteRecordRaw[] = [
           keepAlive: true,
           elIcon: 'Grid'
         }
+      },
+      {
+        path: 'record',
+        component: () => import('@/views/lcd/record/index.vue'),
+        name: 'LcdRecord',
+        meta: {
+          title: '拉取记录',
+          keepAlive: true,
+          elIcon: 'Grid'
+        }
       }
     ]
   },

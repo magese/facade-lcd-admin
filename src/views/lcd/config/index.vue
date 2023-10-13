@@ -5,12 +5,14 @@ import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from 'elem
 import { CirclePlus, Plus, Minus, Refresh, RefreshRight, Search } from '@element-plus/icons-vue'
 import { usePagination } from '@/hooks/usePagination'
 import { ConfigData, SourceFile } from '@/api/config/types/config'
+import { useRouter } from 'vue-router'
 
 defineOptions({
   // 命名当前组件
   name: 'LcdConfig'
 })
 
+const router = useRouter()
 const loading = ref<boolean>(false)
 const { paginationData, handleCurrentChange, handleSizeChange } = usePagination()
 
@@ -168,6 +170,16 @@ const delProtocol = (index: number) => {
 }
 
 const currentUpdateId = ref<undefined | string>(undefined)
+const handleRecords = (row: ConfigData) => {
+  console.log(row.id)
+  router.push({
+    name: 'LcdRecord',
+    query: {
+      id: row.id
+    }
+  })
+}
+
 const handleUpdate = (row: ConfigData) => {
   currentUpdateId.value = row.id
   drawerVisible.value = true
@@ -295,6 +307,7 @@ watch(drawerVisible, (n) => {
           <el-table-column prop="createTime" label="创建时间" align="center" />
           <el-table-column fixed="right" label="操作" width="150" align="center">
             <template #default="scope">
+              <el-button type="primary" text bg size="small" @click="handleRecords(scope.row)">查看记录</el-button>
               <el-button type="primary" text bg size="small" @click="handleUpdate(scope.row)">修改</el-button>
             </template>
           </el-table-column>
@@ -328,14 +341,17 @@ watch(drawerVisible, (n) => {
           ref="formRef"
           :model="formData"
           :rules="formRules"
+          :disabled="isView"
           label-width="120px"
           label-position="left"
         >
-          <el-input v-model="formData.id" style="display: none" />
           <el-timeline>
             <el-timeline-item timestamp="step1" placement="top">
               <el-card>
                 <h4>渠道配置</h4>
+                <el-form-item prop="id" label="配置ID" v-if="currentUpdateId">
+                  <el-input v-model="formData.id" readonly />
+                </el-form-item>
                 <el-form-item prop="configName" label="配置名称">
                   <el-input v-model="formData.configName" placeholder="请输入配置名称" />
                 </el-form-item>
