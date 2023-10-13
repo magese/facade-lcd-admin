@@ -1,5 +1,5 @@
-import {createRouter, type RouteRecordRaw} from 'vue-router'
-import {flatMultiLevelRoutes, history} from './helper'
+import { createRouter, type RouteRecordRaw } from 'vue-router'
+import { flatMultiLevelRoutes, history } from './helper'
 import routeSettings from '@/config/route'
 
 const Layouts = () => import('@/layouts/index.vue')

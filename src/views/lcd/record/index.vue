@@ -19,7 +19,7 @@ const { paginationData, handleCurrentChange, handleSizeChange } = usePagination(
 const tableData = ref<RecordData[]>([])
 const searchFormRef = ref<FormInstance | null>(null)
 const searchData = reactive({
-  pullConfigId: route.query.id
+  pullConfigId: (route.query.id as string) || ''
 })
 const getPageData = () => {
   loading.value = true
