@@ -322,7 +322,7 @@ watch(drawerVisible, (n) => {
             </template>
           </el-table-column>
           <el-table-column prop="createTime" label="创建时间" align="center" />
-          <el-table-column fixed="right" label="操作" width="250" align="center">
+          <el-table-column fixed="right" label="操作" width="320" align="center">
             <template #default="scope">
               <el-button text bg size="small" @click="handleRecords(scope.row)">拉取记录</el-button>
               <el-button type="primary" text bg size="small" @click="handleUpdate(scope.row)">修改</el-button>
