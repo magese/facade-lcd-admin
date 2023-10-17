@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { reactive, ref, watch } from 'vue'
 import { deleteApi, editApi, pageApi } from '@/api/config'
+import { byConfigIdApi } from '@/api/retry'
 import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from 'element-plus'
 import { CirclePlus, Plus, Minus, Refresh, RefreshRight, Search } from '@element-plus/icons-vue'
 import { usePagination } from '@/hooks/usePagination'
@@ -195,6 +196,14 @@ const handleDelete = (row: ConfigData) => {
   })
 }
 
+const handleRetry = (row: ConfigData) => {
+  byConfigIdApi({
+    configId: row.id
+  }).then(() => {
+    ElMessage.success('生成成功')
+  })
+}
+
 const handleView = (row: ConfigData) => {
   isView.value = true
   drawerVisible.value = true
@@ -315,11 +324,16 @@ watch(drawerVisible, (n) => {
           <el-table-column prop="createTime" label="创建时间" align="center" />
           <el-table-column fixed="right" label="操作" width="250" align="center">
             <template #default="scope">
-              <el-button text bg size="small" @click="handleRecords(scope.row)">查看记录</el-button>
+              <el-button text bg size="small" @click="handleRecords(scope.row)">拉取记录</el-button>
               <el-button type="primary" text bg size="small" @click="handleUpdate(scope.row)">修改</el-button>
-              <el-popconfirm title="确认要删除该记录？">
+              <el-popconfirm title="确认要删除该记录？" @confirm="handleDelete(scope.row)">
                 <template #reference>
-                  <el-button type="danger" text bg size="small" @click="handleDelete(scope.row)">删除</el-button>
+                  <el-button type="danger" text bg size="small">删除</el-button>
+                </template>
+              </el-popconfirm>
+              <el-popconfirm title="确认要立即生成拉取记录？" @confirm="handleRetry(scope.row)">
+                <template #reference>
+                  <el-button type="primary" text bg size="small">生成</el-button>
                 </template>
               </el-popconfirm>
             </template>

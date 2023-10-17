@@ -177,14 +177,14 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getPage
           <el-table-column prop="lastCallbackTime" label="最后回传时间" align="center" />
           <el-table-column fixed="right" label="操作" width="200" align="center">
             <template #default="scope">
-              <el-popconfirm title="确认要删除该记录？">
+              <el-popconfirm title="确认要删除该记录？" @confirm="handleDelete(scope.row)">
                 <template #reference>
-                  <el-button type="danger" text bg size="small" @click="handleDelete(scope.row)">删除</el-button>
+                  <el-button type="danger" text bg size="small">删除</el-button>
                 </template>
               </el-popconfirm>
-              <el-popconfirm title="确认要重试该记录？">
+              <el-popconfirm title="确认要重试该记录？" @confirm="handleRetry(scope.row)">
                 <template #reference>
-                  <el-button type="primary" text bg size="small" @click="handleRetry(scope.row)">重试</el-button>
+                  <el-button type="primary" text bg size="small">重试</el-button>
                 </template>
               </el-popconfirm>
             </template>

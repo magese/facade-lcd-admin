@@ -2,7 +2,7 @@ import { request } from '@/utils/service'
 import type * as Retry from './types/retry'
 
 export function byConfigIdApi(data: Retry.RetryByConfigIdRequest) {
-  return request<Record.RecordPageResponse>({
+  return request({
     url: 'retry/by-config-id',
     method: 'post',
     data
