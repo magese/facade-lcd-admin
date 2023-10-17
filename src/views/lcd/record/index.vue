@@ -28,6 +28,7 @@ const searchData = reactive({
 })
 const getPageData = () => {
   loading.value = true
+  searchData.pullConfigId = (route.query.id as string) || searchData.pullConfigId
   pageApi({
     currPage: paginationData.currentPage,
     pageSize: paginationData.pageSize,
@@ -61,6 +62,7 @@ const handleDelete = (row: RecordData) => {
     id: row.id
   }).then(() => {
     ElMessage.success('删除成功')
+    getPageData()
   })
 }
 
@@ -69,6 +71,7 @@ const handleRetry = (row: RecordData) => {
     recordId: row.id
   }).then(() => {
     ElMessage.success('重试成功')
+    getPageData()
   })
 }
 

@@ -193,6 +193,7 @@ const handleDelete = (row: ConfigData) => {
     ids: ids
   }).then(() => {
     ElMessage.success('删除成功')
+    getPageData()
   })
 }
 
