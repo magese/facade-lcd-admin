@@ -326,14 +326,14 @@ watch(drawerVisible, (n) => {
             <template #default="scope">
               <el-button text bg size="small" @click="handleRecords(scope.row)">拉取记录</el-button>
               <el-button type="primary" text bg size="small" @click="handleUpdate(scope.row)">修改</el-button>
+              <el-popconfirm title="确认要立即生成拉取记录？" @confirm="handleRetry(scope.row)">
+                <template #reference>
+                  <el-button type="success" text bg size="small">生成</el-button>
+                </template>
+              </el-popconfirm>
               <el-popconfirm title="确认要删除该记录？" @confirm="handleDelete(scope.row)">
                 <template #reference>
                   <el-button type="danger" text bg size="small">删除</el-button>
-                </template>
-              </el-popconfirm>
-              <el-popconfirm title="确认要立即生成拉取记录？" @confirm="handleRetry(scope.row)">
-                <template #reference>
-                  <el-button type="primary" text bg size="small">生成</el-button>
                 </template>
               </el-popconfirm>
             </template>
