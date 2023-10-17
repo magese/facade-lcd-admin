@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import { reactive, ref, watch } from 'vue'
-import { pageApi } from '@/api/record'
-import { type FormInstance } from 'element-plus'
+import { deleteApi, pageApi } from '@/api/record'
+import { byRecordIdApi } from '@/api/retry'
+import { ElMessage, type FormInstance } from 'element-plus'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { usePagination } from '@/hooks/usePagination'
 import { RecordData } from '@/api/record/types/record'
@@ -19,14 +20,22 @@ const { paginationData, handleCurrentChange, handleSizeChange } = usePagination(
 const tableData = ref<RecordData[]>([])
 const searchFormRef = ref<FormInstance | null>(null)
 const searchData = reactive({
-  pullConfigId: (route.query.id as string) || ''
+  pullConfigId: (route.query.id as string) || '',
+  channelCode: '',
+  dataId: '',
+  fileDate: '',
+  pullType: ''
 })
 const getPageData = () => {
   loading.value = true
   pageApi({
     currPage: paginationData.currentPage,
     pageSize: paginationData.pageSize,
-    pullConfigId: searchData.pullConfigId || ''
+    pullConfigId: searchData.pullConfigId || '',
+    channelCode: searchData.channelCode || '',
+    dataId: searchData.dataId || '',
+    fileDate: searchData.fileDate || '',
+    pullType: searchData.pullType || ''
   })
     .then((res) => {
       paginationData.total = res.data.totalCount
@@ -46,6 +55,23 @@ const resetSearch = () => {
   searchFormRef.value?.resetFields()
   handleSearch()
 }
+
+const handleDelete = (row: RecordData) => {
+  deleteApi({
+    id: row.id
+  }).then(() => {
+    ElMessage.success('删除成功')
+  })
+}
+
+const handleRetry = (row: RecordData) => {
+  byRecordIdApi({
+    recordId: row.id
+  }).then(() => {
+    ElMessage.success('重试成功')
+  })
+}
+
 //#endregion
 
 /** 监听分页参数的变化 */
@@ -57,7 +83,30 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getPage
     <el-card v-loading="loading" shadow="never" class="search-wrapper">
       <el-form ref="searchFormRef" :inline="true" :model="searchData">
         <el-form-item prop="pullConfigId" label="配置ID">
-          <el-input v-model="searchData.pullConfigId" placeholder="请输入" />
+          <el-input v-model="searchData.pullConfigId" placeholder="请输入配置ID" />
+        </el-form-item>
+        <el-form-item prop="channelCode" label="渠道号">
+          <el-input v-model="searchData.channelCode" placeholder="请输入渠道号" />
+        </el-form-item>
+        <el-form-item prop="dataId" label="执行日期">
+          <el-date-picker
+            v-model="searchData.dataId"
+            type="date"
+            placeholder="请选择执行日期"
+            value-format="YYYY-MM-DD"
+          />
+        </el-form-item>
+        <el-form-item prop="fileDate" label="文件日期">
+          <el-date-picker
+            v-model="searchData.fileDate"
+            type="date"
+            placeholder="请选择文件日期"
+            format="YYYYMMDD"
+            value-format="YYYYMMDD"
+          />
+        </el-form-item>
+        <el-form-item prop="pullType" label="拉取类型">
+          <el-input v-model="searchData.pullType" placeholder="请输入拉取类型" />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :icon="Search" @click="handleSearch">查询</el-button>
@@ -117,6 +166,7 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getPage
               <el-tag effect="plain" type="warning" v-else-if="scope.row.status === 1">1-待发送</el-tag>
               <el-tag effect="plain" v-else-if="scope.row.status === 2 && scope.row.callback === 1">2-待回传</el-tag>
               <el-tag effect="plain" type="success" v-else-if="scope.row.status === 2">2-已发送</el-tag>
+              <el-tag effect="plain" type="success" v-else-if="scope.row.status === 3">3-已回传</el-tag>
               <el-tag effect="plain" type="danger" v-else-if="scope.row.status === 9">9-执行失败</el-tag>
               <el-tag effect="plain" type="danger" v-else>{{ scope.row.status + '-未知状态' }}</el-tag>
             </template>
@@ -125,6 +175,20 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getPage
           <el-table-column prop="lastPullTime" label="最后拉取时间" align="center" />
           <el-table-column prop="lastSendTime" label="最后发送时间" align="center" />
           <el-table-column prop="lastCallbackTime" label="最后回传时间" align="center" />
+          <el-table-column fixed="right" label="操作" width="200" align="center">
+            <template #default="scope">
+              <el-popconfirm title="确认要删除该记录？">
+                <template #reference>
+                  <el-button type="danger" text bg size="small" @click="handleDelete(scope.row)">删除</el-button>
+                </template>
+              </el-popconfirm>
+              <el-popconfirm title="确认要重试该记录？">
+                <template #reference>
+                  <el-button type="primary" text bg size="small" @click="handleRetry(scope.row)">重试</el-button>
+                </template>
+              </el-popconfirm>
+            </template>
+          </el-table-column>
         </el-table>
       </div>
       <div class="pager-wrapper">

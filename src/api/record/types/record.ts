@@ -2,6 +2,10 @@ export interface RecordPageRequest {
   currPage: number
   pageSize: number
   pullConfigId: string
+  channelCode: string
+  dataId: string
+  fileDate: string
+  pullType: string
 }
 
 export type RecordPageResponse = ApiResponseData<PageData<RecordData>>
@@ -42,4 +46,8 @@ export interface RecordData {
   fileCount: number
   isRealTime: boolean
   realtimeBeginTime: string
+}
+
+export interface RecordDeleteRequest {
+  id: string
 }

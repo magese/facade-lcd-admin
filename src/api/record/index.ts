@@ -8,3 +8,11 @@ export function pageApi(data: Record.RecordPageRequest) {
     data
   })
 }
+
+export function deleteApi(data: Record.RecordDeleteRequest) {
+  return request({
+    url: 'record/delete',
+    method: 'post',
+    data
+  })
+}

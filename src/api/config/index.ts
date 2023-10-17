@@ -16,3 +16,11 @@ export function editApi(data: Config.ConfigEditRequest) {
     data
   })
 }
+
+export function deleteApi(data: Config.ConfigDeleteRequest) {
+  return request({
+    url: 'config/delete',
+    method: 'post',
+    data
+  })
+}

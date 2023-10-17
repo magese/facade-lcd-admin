@@ -88,3 +88,7 @@ export interface SourceFile {
   required: number
   renameTo: string
 }
+
+export interface ConfigDeleteRequest {
+  ids: string[]
+}

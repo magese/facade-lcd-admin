@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { reactive, ref, watch } from 'vue'
-import { editApi, pageApi } from '@/api/config'
+import { deleteApi, editApi, pageApi } from '@/api/config'
 import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from 'element-plus'
 import { CirclePlus, Plus, Minus, Refresh, RefreshRight, Search } from '@element-plus/icons-vue'
 import { usePagination } from '@/hooks/usePagination'
@@ -186,6 +186,15 @@ const handleUpdate = (row: ConfigData) => {
   Object.assign(formData, row)
 }
 
+const handleDelete = (row: ConfigData) => {
+  const ids = [row.id]
+  deleteApi({
+    ids: ids
+  }).then(() => {
+    ElMessage.success('删除成功')
+  })
+}
+
 const handleView = (row: ConfigData) => {
   isView.value = true
   drawerVisible.value = true
@@ -277,7 +286,6 @@ watch(drawerVisible, (n) => {
       </div>
       <div class="table-wrapper">
         <el-table :data="tableData">
-          <el-table-column type="selection" width="50" align="center" />
           <el-table-column prop="configName" label="配置名称" align="center">
             <template #default="scope">
               <el-link type="primary" @click="handleView(scope.row)">{{ scope.row.configName }}</el-link>
@@ -307,8 +315,13 @@ watch(drawerVisible, (n) => {
           <el-table-column prop="createTime" label="创建时间" align="center" />
           <el-table-column fixed="right" label="操作" width="250" align="center">
             <template #default="scope">
-              <el-button type="primary" text bg size="small" @click="handleRecords(scope.row)">查看记录</el-button>
+              <el-button text bg size="small" @click="handleRecords(scope.row)">查看记录</el-button>
               <el-button type="primary" text bg size="small" @click="handleUpdate(scope.row)">修改</el-button>
+              <el-popconfirm title="确认要删除该记录？">
+                <template #reference>
+                  <el-button type="danger" text bg size="small" @click="handleDelete(scope.row)">删除</el-button>
+                </template>
+              </el-popconfirm>
             </template>
           </el-table-column>
         </el-table>
@@ -349,9 +362,14 @@ watch(drawerVisible, (n) => {
             <el-timeline-item timestamp="step1" placement="top">
               <el-card>
                 <h4>渠道配置</h4>
-                <el-form-item prop="id" label="配置ID" v-if="currentUpdateId">
+                <el-form-item prop="id" label="配置ID">
                   <el-input v-model="formData.id" readonly />
                 </el-form-item>
+              </el-card>
+            </el-timeline-item>
+            <el-timeline-item timestamp="step1" placement="top">
+              <el-card>
+                <h4>渠道配置</h4>
                 <el-form-item prop="configName" label="配置名称">
                   <el-input v-model="formData.configName" placeholder="请输入配置名称" />
                 </el-form-item>
@@ -613,6 +631,7 @@ watch(drawerVisible, (n) => {
                       v-model="formData.realtimeBeginTime"
                       type="datetime"
                       placeholder="请选择实时回传开始时间"
+                      value-format="YYYY-MM-DD HH:mm:ss"
                     />
                   </el-form-item>
                   <el-form-item prop="okFileName" label="OK文件名称">
