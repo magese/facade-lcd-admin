@@ -38,7 +38,7 @@ const switchSettings = {
   显示色弱模式: showColorWeakness
 }
 
-const envs = ['sit1-vke', 'sit3-vke', 'uat1-vke', 'uat3-vke', 'pre']
+const envs = ['sit1-vke', 'sit3-vke', 'uat1-vke', 'uat2-vke', 'uat3-vke', 'pre']
 
 /** 非左侧模式时，Header 都是 fixed 布局 */
 watchEffect(() => {

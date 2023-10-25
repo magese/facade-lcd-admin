@@ -7,7 +7,7 @@ export interface LayoutSettings {
   /** 布局模式 */
   layoutMode: 'left' | 'top' | 'left-top'
   /** 选择环境 */
-  envMode: 'sit1-vke' | 'sit3-vke' | 'uat1-vke' | 'uat3-vke' | 'pre'
+  envMode: 'sit1-vke' | 'sit3-vke' | 'uat1-vke' | 'uat2-vke' | 'uat3-vke' | 'pre'
   /** 是否显示标签栏 */
   showTagsView: boolean
   /** 是否显示 Logo */
