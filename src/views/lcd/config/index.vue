@@ -1,12 +1,13 @@
 <script lang="ts" setup>
 import { reactive, ref, watch } from 'vue'
-import { deleteApi, editApi, pageApi } from '@/api/config'
+import { deleteApi, editApi, pageApi, exportApi } from '@/api/config'
 import { byConfigIdApi } from '@/api/retry'
-import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from 'element-plus'
-import { CirclePlus, Plus, Minus, Refresh, RefreshRight, Search } from '@element-plus/icons-vue'
+import { ElMessage, ElMessageBox, ElNotification, type FormInstance, type FormRules } from 'element-plus'
+import { CirclePlus, Plus, Minus, Refresh, RefreshRight, Search, Download } from '@element-plus/icons-vue'
 import { usePagination } from '@/hooks/usePagination'
 import { ConfigData, SourceFile } from '@/api/config/types/config'
 import { useRouter } from 'vue-router'
+import { AxiosResponse } from 'axios'
 
 defineOptions({
   // 命名当前组件
@@ -19,6 +20,10 @@ const { paginationData, handleCurrentChange, handleSizeChange } = usePagination(
 
 const drawerVisible = ref<boolean>(false)
 const isView = ref<boolean>(false)
+const selectedRows = ref<ConfigData[]>([])
+const handleSelectionChange = (val: ConfigData[]) => {
+  selectedRows.value = val
+}
 const formRef = ref<FormInstance | null>(null)
 const formData = reactive({
   id: '',
@@ -187,6 +192,13 @@ const handleUpdate = (row: ConfigData) => {
   Object.assign(formData, row)
 }
 
+const handleCopy = (row: ConfigData) => {
+  currentUpdateId.value = undefined
+  drawerVisible.value = true
+  Object.assign(formData, row)
+  formData.id = ''
+}
+
 const handleDelete = (row: ConfigData) => {
   const ids = [row.id]
   deleteApi({
@@ -249,6 +261,52 @@ const resetSearch = () => {
   searchFormRef.value?.resetFields()
   handleSearch()
 }
+const exportSetting = (exportType: string) => {
+  if (selectedRows.value.length <= 0) {
+    ElNotification({
+      title: 'Warning',
+      message: '请先选择要导出的配置',
+      type: 'warning'
+    })
+    return
+  }
+  const ids = selectedRows.value.map((row) => row.id)
+  exportApi({
+    ids: ids,
+    type: exportType
+  })
+    .then((response: AxiosResponse) => {
+      const filename = `lcd-export-${exportType}-${formatDate(new Date())}.zip`
+      const data = response.data
+      const type = response.header['Content-Type']
+      const blob = new Blob([data], { type })
+
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = filename
+      a.click()
+      window.URL.revokeObjectURL(url)
+    })
+    .catch(() => {
+      ElMessage.success('下载失败')
+    })
+}
+const formatDate = (date: Date) => {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  const hours = String(date.getHours()).padStart(2, '0')
+  const minutes = String(date.getMinutes()).padStart(2, '0')
+  const seconds = String(date.getSeconds()).padStart(2, '0')
+  return `${year}${month}${day}${hours}${minutes}${seconds}`
+}
+const exportSql = () => {
+  exportSetting('sql')
+}
+const exportYml = () => {
+  exportSetting('yml')
+}
 //#endregion
 
 /** 监听分页参数的变化 */
@@ -290,12 +348,15 @@ watch(drawerVisible, (n) => {
         </div>
         <div>
           <el-tooltip content="刷新当前页">
+            <el-button :icon="Download" circle @click="exportSql">SQL</el-button>
+            <el-button :icon="Download" circle @click="exportYml">YML</el-button>
             <el-button type="primary" :icon="RefreshRight" circle @click="getPageData" />
           </el-tooltip>
         </div>
       </div>
       <div class="table-wrapper">
-        <el-table :data="tableData">
+        <el-table :data="tableData" @selection-change="handleSelectionChange">
+          <el-table-column type="selection" width="55" />
           <el-table-column prop="configName" label="配置名称" align="center">
             <template #default="scope">
               <el-link type="primary" @click="handleView(scope.row)">{{ scope.row.configName }}</el-link>
@@ -327,6 +388,7 @@ watch(drawerVisible, (n) => {
             <template #default="scope">
               <el-button text bg size="small" @click="handleRecords(scope.row)">拉取记录</el-button>
               <el-button type="primary" text bg size="small" @click="handleUpdate(scope.row)">修改</el-button>
+              <el-button type="primary" text bg size="small" @click="handleCopy(scope.row)">复制</el-button>
               <el-popconfirm title="确认要立即生成拉取记录？" @confirm="handleRetry(scope.row)">
                 <template #reference>
                   <el-button type="success" text bg size="small">生成</el-button>
@@ -629,7 +691,7 @@ watch(drawerVisible, (n) => {
                     <el-select v-model="formData.callbackType" placeholder="请选择回传类型">
                       <el-option label="PDF" value="pdf" />
                       <el-option label="ZIP" value="zip" />
-                      <el-option label="Kafka" value="kafka" />
+                      <el-option label="CUSTOMIZE" value="customize" />
                     </el-select>
                   </el-form-item>
                   <el-form-item prop="callbackFilePath" label="回传文件路径">

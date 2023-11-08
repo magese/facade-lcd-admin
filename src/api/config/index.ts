@@ -1,5 +1,6 @@
 import { request } from '@/utils/service'
 import type * as Config from './types/config'
+import { AxiosResponse } from 'axios'
 
 export function pageApi(data: Config.ConfigPageRequest) {
   return request<Config.ConfigPageResponse>({
@@ -22,5 +23,14 @@ export function deleteApi(data: Config.ConfigDeleteRequest) {
     url: 'config/delete',
     method: 'post',
     data
+  })
+}
+
+export function exportApi(data: Config.ConfigExportRequest) {
+  return request<AxiosResponse>({
+    url: 'config/export',
+    method: 'post',
+    data,
+    responseType: 'blob'
   })
 }

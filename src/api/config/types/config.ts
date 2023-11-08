@@ -92,3 +92,8 @@ export interface SourceFile {
 export interface ConfigDeleteRequest {
   ids: string[]
 }
+
+export interface ConfigExportRequest {
+  ids: string[]
+  type: string
+}
