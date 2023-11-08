@@ -278,8 +278,8 @@ const exportSetting = (exportType: string) => {
     .then((response: AxiosResponse) => {
       const filename = `lcd-export-${exportType}-${formatDate(new Date())}.zip`
       const data = response.data
-      const type = response.headers['Content-Type']
-      const blob = new Blob([data], { type })
+      const type = response.headers['Content-Type'] as string
+      const blob = new Blob([data], { type: type })
 
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement('a')
@@ -289,7 +289,7 @@ const exportSetting = (exportType: string) => {
       window.URL.revokeObjectURL(url)
     })
     .catch(() => {
-      ElMessage.success('下载失败')
+      ElMessage.error('下载失败')
     })
 }
 const formatDate = (date: Date) => {
