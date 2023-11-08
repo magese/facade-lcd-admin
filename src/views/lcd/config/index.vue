@@ -278,7 +278,7 @@ const exportSetting = (exportType: string) => {
     .then((response: AxiosResponse) => {
       const filename = `lcd-export-${exportType}-${formatDate(new Date())}.zip`
       const data = response.data
-      const type = response.header['Content-Type']
+      const type = response.headers['Content-Type']
       const blob = new Blob([data], { type })
 
       const url = window.URL.createObjectURL(blob)
