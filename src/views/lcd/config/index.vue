@@ -347,9 +347,13 @@ watch(drawerVisible, (n) => {
           <el-button type="primary" :icon="CirclePlus" @click="drawerVisible = true">新增配置</el-button>
         </div>
         <div>
+          <el-tooltip content="导出SQL">
+            <el-button type="success" :icon="Download" circle @click="exportSql" />
+          </el-tooltip>
+          <el-tooltip content="导出YML">
+            <el-button type="warning" :icon="Download" circle @click="exportYml" />
+          </el-tooltip>
           <el-tooltip content="刷新当前页">
-            <el-button :icon="Download" circle @click="exportSql">SQL</el-button>
-            <el-button :icon="Download" circle @click="exportYml">YML</el-button>
             <el-button type="primary" :icon="RefreshRight" circle @click="getPageData" />
           </el-tooltip>
         </div>
