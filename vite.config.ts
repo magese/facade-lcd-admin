@@ -7,6 +7,7 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import svgLoader from 'vite-svg-loader'
 import UnoCSS from 'unocss/vite'
+import viteLegacyPlugin from "@vitejs/plugin-legacy";
 
 /** 配置项文档：https://cn.vitejs.dev/config */
 export default (configEnv: ConfigEnv): UserConfigExport => {
@@ -87,7 +88,12 @@ export default (configEnv: ConfigEnv): UserConfigExport => {
         symbolId: 'icon-[dir]-[name]'
       }),
       /** UnoCSS */
-      UnoCSS()
+      UnoCSS(),
+      /** 兼容性处理 */
+      viteLegacyPlugin({
+        targets: ['chrome 52'],
+        additionalLegacyPolyfills: ['regenerator-runtime/runtime']
+      })
     ],
     /** Vitest 单元测试配置：https://cn.vitest.dev/config */
     test: {

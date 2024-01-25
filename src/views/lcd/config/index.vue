@@ -161,7 +161,9 @@ const addSourceFile = (index: number) => {
     renameTo: ''
   }
   if (index >= 0) {
-    formData.sourceFiles.push(formData.sourceFiles[index])
+    const copySourceFile = { ...formData.sourceFiles[index] }
+    copySourceFile.id = ''
+    formData.sourceFiles.push(copySourceFile)
   } else {
     formData.sourceFiles.push(defaultSourceFile)
   }
@@ -197,6 +199,11 @@ const handleCopy = (row: ConfigData) => {
   drawerVisible.value = true
   Object.assign(formData, row)
   formData.id = ''
+  if (formData.sourceFiles.length > 0) {
+    formData.sourceFiles.forEach((sf) => {
+      sf.id = ''
+    })
+  }
 }
 
 const handleDelete = (row: ConfigData) => {
