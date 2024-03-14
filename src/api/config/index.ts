@@ -2,6 +2,14 @@ import { request } from '@/utils/service'
 import type * as Config from './types/config'
 import { AxiosResponse } from 'axios'
 
+export function uploadApi(data: FormData) {
+  return request({
+    url: 'config/upload',
+    method: 'post',
+    data
+  })
+}
+
 export function pageApi(data: Config.ConfigPageRequest) {
   return request<Config.ConfigPageResponse>({
     url: 'config/page',

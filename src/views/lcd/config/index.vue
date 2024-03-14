@@ -1,9 +1,17 @@
 <script lang="ts" setup>
 import { reactive, ref, watch } from 'vue'
-import { deleteApi, editApi, pageApi, exportApi } from '@/api/config'
+import { uploadApi, deleteApi, editApi, pageApi, exportApi } from '@/api/config'
 import { byConfigIdApi } from '@/api/retry'
-import { ElMessage, ElMessageBox, ElNotification, type FormInstance, type FormRules } from 'element-plus'
-import { CirclePlus, Plus, Minus, Refresh, RefreshRight, Search, Download } from '@element-plus/icons-vue'
+import {
+  ElMessage,
+  ElMessageBox,
+  ElNotification,
+  type FormInstance,
+  type FormRules,
+  UploadRequestOptions,
+  UploadUserFile
+} from 'element-plus'
+import { CirclePlus, Plus, Minus, Refresh, RefreshRight, Search, Download, Upload } from '@element-plus/icons-vue'
 import { usePagination } from '@/hooks/usePagination'
 import { ConfigData, SourceFile } from '@/api/config/types/config'
 import { useRouter } from 'vue-router'
@@ -308,6 +316,25 @@ const formatDate = (date: Date) => {
   const seconds = String(date.getSeconds()).padStart(2, '0')
   return `${year}${month}${day}${hours}${minutes}${seconds}`
 }
+const fileList = ref<UploadUserFile[]>([])
+const uploadYml: UploadRequestHandler = (options: UploadRequestOptions) => {
+  console.log(options)
+  const file = options.file
+  if (!file) {
+    ElNotification({
+      title: 'Warning',
+      message: '请先选择yml文件',
+      type: 'warning'
+    })
+    return
+  }
+  const data = new FormData()
+  data.append('file', file)
+  uploadApi(data).then(() => {
+    ElMessage.success('上传成功')
+    getPageData()
+  })
+}
 const exportSql = () => {
   exportSetting('sql')
 }
@@ -350,8 +377,19 @@ watch(drawerVisible, (n) => {
     </el-card>
     <el-card v-loading="loading" shadow="never">
       <div class="toolbar-wrapper">
-        <div>
+        <div style="display: flex; width: 240px; justify-content: space-between">
           <el-button type="primary" :icon="CirclePlus" @click="drawerVisible = true">新增配置</el-button>
+          <el-upload
+            v-model:file-list="fileList"
+            action="config/upload"
+            :http-request="uploadYml"
+            :limit="1"
+            style="width: 110px"
+          >
+            <el-tooltip content="上传YML">
+              <el-button type="primary" :icon="Upload">上传YML</el-button>
+            </el-tooltip>
+          </el-upload>
         </div>
         <div>
           <el-tooltip content="导出SQL">
@@ -487,7 +525,12 @@ watch(drawerVisible, (n) => {
                   </el-select>
                 </el-form-item>
                 <el-form-item prop="execTiming" label="开始时间">
-                  <el-time-picker v-model="formData.execTiming" placeholder="请选择执行开始时间" />
+                  <el-time-picker
+                    v-model="formData.execTiming"
+                    format="HH:mm:ss"
+                    value-format="HH:mm:ss"
+                    placeholder="请选择执行开始时间"
+                  />
                 </el-form-item>
                 <el-form-item prop="retryLimit" label="重试次数">
                   <el-input-number v-model="formData.retryLimit" :min="1" :max="99" />
