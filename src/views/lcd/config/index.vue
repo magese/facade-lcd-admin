@@ -8,9 +8,8 @@ import {
   ElNotification,
   type FormInstance,
   type FormRules,
-  UploadRequestOptions,
-  UploadRequestHandler,
-  UploadUserFile
+  UploadUserFile,
+  UploadRequestOptions
 } from 'element-plus'
 import { CirclePlus, Plus, Minus, Refresh, RefreshRight, Search, Download, Upload } from '@element-plus/icons-vue'
 import { usePagination } from '@/hooks/usePagination'
@@ -318,8 +317,8 @@ const formatDate = (date: Date) => {
   return `${year}${month}${day}${hours}${minutes}${seconds}`
 }
 const fileList = ref<UploadUserFile[]>([])
-const uploadYml: UploadRequestHandler = (options: UploadRequestOptions) => {
-  console.log(options)
+const uploadYml = (options: UploadRequestOptions) => {
+  const data = new FormData()
   const file = options.file
   if (!file) {
     ElNotification({
@@ -327,14 +326,14 @@ const uploadYml: UploadRequestHandler = (options: UploadRequestOptions) => {
       message: '请先选择yml文件',
       type: 'warning'
     })
-    return
+    return new XMLHttpRequest()
   }
-  const data = new FormData()
   data.append('file', file)
   uploadApi(data).then(() => {
     ElMessage.success('上传成功')
     getPageData()
   })
+  return new XMLHttpRequest()
 }
 const exportSql = () => {
   exportSetting('sql')
