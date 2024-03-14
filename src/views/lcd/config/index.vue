@@ -9,6 +9,7 @@ import {
   type FormInstance,
   type FormRules,
   UploadRequestOptions,
+  UploadRequestHandler,
   UploadUserFile
 } from 'element-plus'
 import { CirclePlus, Plus, Minus, Refresh, RefreshRight, Search, Download, Upload } from '@element-plus/icons-vue'
