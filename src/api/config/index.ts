@@ -6,7 +6,10 @@ export function uploadApi(data: FormData) {
   return request({
     url: 'config/upload',
     method: 'post',
-    data
+    data,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
   })
 }
 
