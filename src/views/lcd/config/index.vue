@@ -143,6 +143,10 @@ const resetForm = () => {
   formData.okFileName = ''
   formData.realtimeBeginTime = ''
   formData.sourceFiles = []
+  protocolTypes.splice(1)
+  protocolTypes[0].protocol = ''
+  protocolTypes[0].sign = true
+  protocolTypes[0].accept = false
 }
 
 const delSourceFile = (index: number) => {
@@ -177,6 +181,27 @@ const addSourceFile = (index: number) => {
   }
 }
 
+const initProtocol = () => {
+  if (!formData.callbackProtocolType) {
+    return
+  }
+  protocolTypes.splice(0)
+  const types = formData.callbackProtocolType.split(',')
+  types.forEach((t) => {
+    const settings = t.split('-')
+    let sign = true
+    let accept = false
+    if (settings.length == 2) {
+      sign = false
+      accept = false
+    } else if (settings.length == 3) {
+      sign = false
+      accept = true
+    }
+    protocolTypes.push({ protocol: settings[0], sign: sign, accept: accept })
+  })
+}
+
 const addProtocol = () => {
   protocolTypes.push({ protocol: '', sign: true, accept: false })
 }
@@ -200,6 +225,7 @@ const handleUpdate = (row: ConfigData) => {
   currentUpdateId.value = row.id
   drawerVisible.value = true
   Object.assign(formData, row)
+  initProtocol()
 }
 
 const handleCopy = (row: ConfigData) => {
@@ -212,6 +238,7 @@ const handleCopy = (row: ConfigData) => {
       sf.id = ''
     })
   }
+  initProtocol()
 }
 
 const handleDelete = (row: ConfigData) => {
@@ -236,6 +263,7 @@ const handleView = (row: ConfigData) => {
   isView.value = true
   drawerVisible.value = true
   Object.assign(formData, row)
+  initProtocol()
 }
 
 const tableData = ref<ConfigData[]>([])
